@@ -7,7 +7,7 @@
     <button @click="removeCount()">-</button> -->
 
     <b-table striped hover :items="items" :fields="fields">
-    <!-- TELLIMUSTE TABEL -->   
+      <!-- TELLIMUSTE TABEL -->
       <template #cell(client)="data">
         <b class="text-info">{{ data.value.lastName }}</b
         >, <b>{{ data.value.firstName }}</b>
@@ -15,15 +15,19 @@
 
       <!-- nupp toodete tabeli ilmumiseks -->
       <template #cell(actions)="data">
-        <b-button variant="success" @click="showProducts(data.item.products)"
+        <b-button v-b-modal.modal-1 variant="success" @click="showProducts(data.item.products, data.item)"
           >Vaata tooteid</b-button
         >
       </template>
     </b-table>
- <!-- TOOTE TABEL -->
-  <!-- lisada reaalsed toodete kirjed -->
+    <!-- TOOTE TABEL -->
+    <b-modal id="modal-1" :title=productTableName size="xl">
     <b-table striped hover :items="productItems" :fields="productFields">
+       <template #cell(price)="data">
+        <b class="text-info">{{ data.value}} EUR</b>
+      </template>
     </b-table>
+    </b-modal>
   </div>
 </template>
 
@@ -34,14 +38,28 @@ export default {
   name: "Orders",
   data() {
     return {
-      count: 0,
-      fields: ["client", "products", "actions"],
+      fields: [
+        { key: "client", label: "Tellija:" },
+        { key: "createdDate", label: "Tellimus esitatud:" },
+        { key: "deliveryMethod", label: "Transpordiviis:" },
+        { key: "deliveryAddress", label: "Paki saatmise aadress:" },
+        { key: "parcelMachine", label: "Pakiautomaat:" },
+        { key: "totalPrice", label: "Tellimuse summa kokku:" },
+        { key: "actions", label: "" },
+      ],
       items: [],
       productItems: [],
-      productFields: [],
-    };
+      productFields: [
+        { key: "productID", label: "Toote ID:" },
+        { key: "productName", label: "Toote nimi:" },
+        { key: "quantity", label: "Kogus:" },
+        { key: "price", label: "Hind:" },
+      ],
+      productTableName: "Pealkiri",
+     } 
   },
-  async created() {
+
+  async created () {
     const orders = await axios({
       url: `api/orders`,
       method: `GET`,
@@ -51,6 +69,10 @@ export default {
     this.items = orders.data.allOrders;
   },
   methods: {
+    showProducts(products, item) {
+      this.productItems = products;
+      this.productTableName = "Tellimus nr: " + item.orderID;
+    },
     addCount() {
       this.count++;
     },
