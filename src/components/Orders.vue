@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="mb-3">Tellimused</h2>
+    <h3 class="mb-3">Tellimused</h3>
 
     <!--<p>Count: {{ count }}</p>
     <button @click="addCount()">+</button>
@@ -9,8 +9,11 @@
     <b-table striped hover :items="items" :fields="fields">
       <!-- TELLIMUSTE TABEL -->
       <template #cell(client)="data">
-        <b class="text-info">{{ data.value.lastName }}</b
-        >, <b>{{ data.value.firstName }}</b>
+        <b class="text-info">{{ data.value.lastName }}</b>, <b>{{ data.value.firstName }}</b>
+      </template>
+
+      <template #cell(totalPrice)="data">
+        <b class="text-info">{{ data.value }} EUR</b>
       </template>
 
       <!-- nupp toodete tabeli ilmumiseks -->
@@ -33,7 +36,6 @@
 
 <script>
 import axios from "axios";
-
 export default {
   name: "Orders",
   data() {
@@ -53,12 +55,11 @@ export default {
         { key: "productID", label: "Toote ID:" },
         { key: "productName", label: "Toote nimi:" },
         { key: "quantity", label: "Kogus:" },
-        { key: "price", label: "Hind:" },
+        { key: "price", label: "Ühe toote hind:" },
       ],
       productTableName: "Pealkiri",
      } 
   },
-
   async created () {
     const orders = await axios({
       url: `api/orders`,
