@@ -11,15 +11,15 @@
         <b-button
           v-b-modal.modal-1
           variant="success"
-          @click="showInfo(data.descriptionModalName, data.productDescription)"
-          >Lisainfo</b-button>
+          @click="showInfo(data.item.productName, data.item.description)"
+          >Lisainfo</b-button
+        >
       </template>
     </b-table>
 
     <!-- LISAINFO -->
     <b-modal id="modal-1" :title="descriptionModalName" size="xl">
-      <b-table striped hover :items="productDescription">
-    </b-table>
+      <p>{{ productDescription }}</p>
     </b-modal>
   </div>
 </template>
@@ -35,14 +35,13 @@ export default {
         { key: "type", label: "Toote liik:" },
         { key: "productName", label: "Toode:" },
         { key: "size", label: "Suurus:" },
-         { key: "sizeUnit", label: "Ühik:" },
+        { key: "sizeUnit", label: "Ühik:" },
         { key: "price", label: "Hind:" },
         { key: "moreInfo", label: " " },
       ],
       items: [],
-     descriptionModalName: "",
-    productDescription: "",
-
+      descriptionModalName: "productName",
+      productDescription: "description",
     };
   },
   async created() {
@@ -58,13 +57,12 @@ export default {
     showInfo(productName, description) {
       this.descriptionModalName = productName;
       this.productDescription = description;
-  }
-}
+    },
+  },
 };
 </script>
 
 <style scoped>
-
 h3 {
   margin: 40px 0 0;
 }
